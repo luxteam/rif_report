@@ -1,19 +1,37 @@
 @font-face {
-  font-family: "AMDRTG";
-  src: url(../fonts/AMDRTG.ttf) format("truetype");
+    font-family: "AMDRTG";
+    src: url(../fonts/AMDRTG.ttf) format("truetype");
 }
 @font-face {
-  font-family: "Open Sans";
-  src: url(../fonts/OpenSans-Regular.ttf) format("truetype");
+    font-family: "Open Sans";
+    src: url(../fonts/OpenSans-Regular.ttf) format("truetype");
 }
 @font-face {
     font-family: "Open Sans Bold";
     src: url(../fonts/OpenSans-Bold.ttf) format("truetype");
 }
 
+body {
+    background-color: rgba(242, 242, 242, 1) !important;
+}
+
 th, td {
     font-family: 'Open Sans';
     text-align: center !important;
+}
+
+th {
+    border-top: 1px solid black !important;
+    border-left: 1px solid black !important;
+    border-right: 1px solid black !important;
+}
+
+td {
+    border: 1px solid black !important;
+}
+
+tbody {
+    background-color: rgba(255, 255, 255, 1) !important;
 }
 
 .content-container {
@@ -28,4 +46,33 @@ h1 {
     font-size: 32px !important;
     text-align: left;
     margin-left: 3%;
+}
+
+hr {
+    height: 5px !important;
+    width: 95%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgba(222, 222, 222, 1);
+    background-color: rgba(222, 222, 222, 1);
+    border: none !important;
+}
+
+.chart-container {
+    display: block;
+    margin: auto;
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+#summary-chart-container {
+    width: 600px;
+    height: 500px;
+}
+
+#compare-chart-container {
+    width: 900px;
+    height: 500px;
+    padding: 20px;
 }

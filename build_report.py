@@ -45,13 +45,34 @@ def prepare_results_dir(output_dir):
 
 def build_summary_template(test_results):
     summary_report = {}
+    summary_report['results'] = {}
+    summary_report['summary'] = {
+        'Tests': 0,
+        'Time': 0
+    }
+    summary_report['summary']['statuses'] = {
+    	'Passed': 0,
+        'Failures': 0,
+        'Errors': 0,
+        'Disabled': 0
+    }
     xml_reports = glob(os.path.join(test_results, XML_REPORT_PATTERN))
     for xml_report_path in xml_reports:
         with open(xml_report_path, 'r') as file:
             xml_report = file.read()
         platform_name = os.path.split(xml_report_path)[1].replace('Test-', '').split('.')[0]
-        summary_report[platform_name] = xmltodict.parse(xml_report)
-    summary_report = json.loads(json.dumps(summary_report))
+        # make platform name more readable
+        platform_name = platform_name.replace('_', ' '). replace('-', ' (') + ')'
+        summary_report['results'][platform_name] = xmltodict.parse(xml_report)
+        summary_report['summary']['statuses']['Passed'] += int(summary_report['results'][platform_name]['testsuites']['@tests']) \
+        - int(summary_report['results'][platform_name]['testsuites']['@failures']) - int(summary_report['results'][platform_name]['testsuites']['@errors']) \
+        - int(summary_report['results'][platform_name]['testsuites']['@disabled'])
+
+        summary_report['summary']['statuses']['Failures'] += int(summary_report['results'][platform_name]['testsuites']['@failures'])
+        summary_report['summary']['statuses']['Errors'] += int(summary_report['results'][platform_name]['testsuites']['@errors'])
+        summary_report['summary']['statuses']['Disabled'] += int(summary_report['results'][platform_name]['testsuites']['@disabled'])
+        summary_report['summary']['Tests'] += int(summary_report['results'][platform_name]['testsuites']['@tests'])
+        summary_report['summary']['Time'] += float(summary_report['results'][platform_name]['testsuites']['@time'])
     return summary_report
 
 
