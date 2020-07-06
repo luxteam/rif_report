@@ -2,7 +2,7 @@ import os
 import argparse
 import logging
 import jinja2
-from shutil import copytree
+from shutil import copytree, rmtree
 from config import *
 from glob import glob
 import xmltodict
@@ -32,6 +32,9 @@ def save_html_report(report, output_dir, file_name):
 
 
 def prepare_results_dir(output_dir):
+    if os.path.exists(os.path.join(output_dir, 'resources')):
+        rmtree(os.path.join(output_dir, 'resources'), True)
+
     try:
         copytree(os.path.join('report', 'resources'),
                  os.path.join(output_dir, 'resources'))
@@ -48,6 +51,7 @@ def build_summary_template(test_results):
             xml_report = file.read()
         platform_name = os.path.split(xml_report_path)[1].replace('Test-', '').split('.')[0]
         summary_report[platform_name] = xmltodict.parse(xml_report)
+    summary_report = json.loads(json.dumps(summary_report))
     return summary_report
 
 
@@ -64,7 +68,7 @@ def main():
 
     summary_template = env.get_template('summary_template.html')
     summary_html = summary_template.render(title='Results of RIF performance tests',
-                                           text='some text')
+                                           report=summary_report)
     save_html_report(summary_html, args.output_dir, SUMMARY_REPORT_HTML)
 
 

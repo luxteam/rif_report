@@ -1,0 +1,31 @@
+@font-face {
+  font-family: "AMDRTG";
+  src: url(../fonts/AMDRTG.ttf) format("truetype");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url(../fonts/OpenSans-Regular.ttf) format("truetype");
+}
+@font-face {
+    font-family: "Open Sans Bold";
+    src: url(../fonts/OpenSans-Bold.ttf) format("truetype");
+}
+
+th, td {
+    font-family: 'Open Sans';
+    text-align: center !important;
+}
+
+.content-container {
+    width: 90%;
+    margin: auto;
+}
+
+h1 {
+    font-family: 'AMDRTG' !important;
+    font-weight: bold !important;
+    font-style: normal;
+    font-size: 32px !important;
+    text-align: left;
+    margin-left: 3%;
+}
