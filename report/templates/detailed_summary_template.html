@@ -48,7 +48,7 @@
                         {% for testcase in testsuite.testcase %}
                             <tr>
                                 <td class="text-black">{{ testcase['@name'] }}</td>
-                                <td class="text-black">{{ testcase['@result'] }}</td>
+                                <td class="text-black {{ testcase['@result'] }}Status">{{ testcase['@result'] }}</td>
                                 <td class="text-black">{{ testcase['@time'] }}</td>
                             </tr>
                         {% endfor %}
@@ -56,7 +56,7 @@
                         {% for testcase in report.testsuites.testsuite[testsuite] %}
                             <tr>
                                 <td class="text-black">{{ testcase['@name'] }}</td>
-                                <td class="text-black">{{ testcase['@result'] }}</td>
+                                <td class="text-black {{ testcase['@result'] }}Status">{{ testcase['@result'] }}</td>
                                 <td class="text-black">{{ testcase['@time'] }}</td>
                             </tr>
                         {% endfor %}

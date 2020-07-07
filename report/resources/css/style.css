@@ -91,3 +91,19 @@ hr {
     color: rgba(86, 86, 90, 1);
     text-decoration: none;
 }
+
+.passedStatus, .completedStatus {
+    background-color: rgba(211, 255, 228, 1);
+}
+
+.failedStatus, .failureStatus {
+    background: repeating-linear-gradient( 45deg, rgba(232, 103, 85, 1.0), rgba(232, 103, 85, 0.8) 20px, rgba(232, 120, 90, 0.8) 20px, rgba(232, 120, 90, 1.0) 40px );
+}
+
+.errorStatus {
+    background-color: rgba(232, 103, 85, 1);
+}
+
+.skippedStatus, .suppressedStatus {
+    background-color: rgba(255, 250, 205, 1);
+}

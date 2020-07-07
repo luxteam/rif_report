@@ -121,7 +121,7 @@
                     <th scope="col" class="text-white" data-sortable="true">Passed</th>
                     <th scope="col" class="text-white" data-sortable="true">Failures</th>
                     <th scope="col" class="text-white" data-sortable="true">Errors</th>
-                    <th scope="col" class="text-white" data-sortable="true">Disabled</th>
+                    <th scope="col" class="text-white" data-sortable="true">Skipped</th>
                     <th scope="col" class="text-white" data-formatter="timeFormatter" data-sortable="true">Duration</th>
                 </tr>
             </thead>
@@ -131,9 +131,9 @@
                         <td class="text-black"><a href="{{ platform + '_detailed.html' }}">{{ report.results[platform].name }}</a></td>
                         <td class="text-black">{{ report.results[platform].testsuites['@tests'] }}</td>
                         <td class="text-black">{{ report.results[platform].testsuites['@tests'] | int - report.results[platform].testsuites['@failures'] | int - report.results[platform].testsuites['@errors'] | int - report.results[platform].testsuites['@disabled'] | int }}</td>
-                        <td class="text-black">{{ report.results[platform].testsuites['@failures'] }}</td>
-                        <td class="text-black">{{ report.results[platform].testsuites['@errors'] }}</td>
-                        <td class="text-black">{{ report.results[platform].testsuites['@disabled'] }}</td>
+                        <td class="text-black {{ 'failedStatus' if report.results[platform].testsuites['@failures'] | int != 0 }}">{{ report.results[platform].testsuites['@failures'] }}</td>
+                        <td class="text-black {{ 'errorStatus' if report.results[platform].testsuites['@errors'] | int != 0 }}">{{ report.results[platform].testsuites['@errors'] }}</td>
+                        <td class="text-black {{ 'skippedStatus' if report.results[platform].testsuites['@disabled'] | int != 0 }}">{{ report.results[platform].testsuites['@disabled'] }}</td>
                         <td class="text-black">{{ report.results[platform].testsuites['@time'] }}</td>
                     </tr>
                 {% endfor %}

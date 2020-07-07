@@ -10,13 +10,13 @@ function statusFormatter(value, row, index, field) {
     		return 'Passed'
     		break
     	case 'failure':
-    		return 'Failures'
+    		return 'Failured'
     		break
     	case 'error':
-    		return 'Errors'
+    		return 'Error'
     		break
     	case 'suppressed':
-    		return 'Disabled'
+    		return 'Skipped'
     		break
     }
     return 'Unknown'
