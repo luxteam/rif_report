@@ -92,11 +92,11 @@ hr {
     text-decoration: none;
 }
 
-.passedStatus, .completedStatus {
+.passedStatus {
     background-color: rgba(211, 255, 228, 1);
 }
 
-.failedStatus, .failureStatus {
+.failureStatus {
     background: repeating-linear-gradient( 45deg, rgba(232, 103, 85, 1.0), rgba(232, 103, 85, 0.8) 20px, rgba(232, 120, 90, 0.8) 20px, rgba(232, 120, 90, 1.0) 40px );
 }
 
@@ -104,6 +104,17 @@ hr {
     background-color: rgba(232, 103, 85, 1);
 }
 
-.skippedStatus, .suppressedStatus {
+.skippedStatus {
     background-color: rgba(255, 250, 205, 1);
+}
+
+#footer{
+  text-align: center;
+  width: 100%;
+  position: relative;
+  float: left;
+  padding-bottom: 1vh;
+  padding-top: 2vh;
+  font-family: "Open Sans";
+  font-weight: bold;
 }
