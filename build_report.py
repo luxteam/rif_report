@@ -52,9 +52,9 @@ def build_summary_report(test_results):
     }
     summary_report['summary']['statuses'] = {
     	'Passed': 0,
-        'Failures': 0,
-        'Errors': 0,
-        'Disabled': 0
+        'Failed': 0,
+        'Error': 0,
+        'Skipped': 0
     }
     xml_reports = glob(os.path.join(test_results, XML_REPORT_PATTERN))
     for xml_report_path in xml_reports:
@@ -62,6 +62,16 @@ def build_summary_report(test_results):
             xml_report = file.read()
         platform_name = os.path.split(xml_report_path)[1].replace('Test-', '').split('.')[0]
         summary_report['results'][platform_name] = xmltodict.parse(xml_report)
+
+        for testcase in summary_report['results'][platform_name]['testsuites']['testsuite']['testcase']:
+            if 'error' in testcase:
+                testcase['status'] = 'error'
+            elif 'failure' in testcase:
+                testcase['status'] = 'failure'
+            elif testcase['@result'] == 'suppressed':
+                testcase['status'] = 'skipped'
+            else:
+                testcase['status'] = 'passed'
 
         # make platform name more readable
         displayable_platform_name = platform_name.replace('_', ' '). replace('-', ' (') + ')'
@@ -71,9 +81,9 @@ def build_summary_report(test_results):
         - int(summary_report['results'][platform_name]['testsuites']['@failures']) - int(summary_report['results'][platform_name]['testsuites']['@errors']) \
         - int(summary_report['results'][platform_name]['testsuites']['@disabled'])
 
-        summary_report['summary']['statuses']['Failures'] += int(summary_report['results'][platform_name]['testsuites']['@failures'])
-        summary_report['summary']['statuses']['Errors'] += int(summary_report['results'][platform_name]['testsuites']['@errors'])
-        summary_report['summary']['statuses']['Disabled'] += int(summary_report['results'][platform_name]['testsuites']['@disabled'])
+        summary_report['summary']['statuses']['Failed'] += int(summary_report['results'][platform_name]['testsuites']['@failures'])
+        summary_report['summary']['statuses']['Error'] += int(summary_report['results'][platform_name]['testsuites']['@errors'])
+        summary_report['summary']['statuses']['Skipped'] += int(summary_report['results'][platform_name]['testsuites']['@disabled'])
         summary_report['summary']['Tests'] += int(summary_report['results'][platform_name]['testsuites']['@tests'])
         summary_report['summary']['Time'] += float(summary_report['results'][platform_name]['testsuites']['@time'])
     return summary_report

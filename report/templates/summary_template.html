@@ -87,20 +87,22 @@
 <body>
     <div class="logo">rif performance</div>
 
-    <div class="row">
-        <div class="col-5">
-            <h1>summary</h1>
+    <div class="content-container">
+        <div class="row">
+            <div class="col-5 p-0">
+                <h1>summary</h1>
 
-            <div class="content-container">
-                <div class="chart-container" id="summary-chart-container"></div>
+                <div class="content-container">
+                    <div class="chart-container" id="summary-chart-container"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="col-7">
-            <h1>comparision</h1>
+            <div class="col-7 p-0">
+                <h1>comparision</h1>
 
-            <div class="content-container">
-                <div class="chart-container" id="compare-chart-container"></div>
+                <div class="content-container">
+                    <div class="chart-container" id="compare-chart-container"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -119,8 +121,8 @@
                     <th scope="col" class="text-white" data-sortable="true">Platform name</th>
                     <th scope="col" class="text-white" data-sortable="true">Total</th>
                     <th scope="col" class="text-white" data-sortable="true">Passed</th>
-                    <th scope="col" class="text-white" data-sortable="true">Failures</th>
-                    <th scope="col" class="text-white" data-sortable="true">Errors</th>
+                    <th scope="col" class="text-white" data-sortable="true">Failed</th>
+                    <th scope="col" class="text-white" data-sortable="true">Error</th>
                     <th scope="col" class="text-white" data-sortable="true">Skipped</th>
                     <th scope="col" class="text-white" data-formatter="timeFormatter" data-sortable="true">Duration</th>
                 </tr>

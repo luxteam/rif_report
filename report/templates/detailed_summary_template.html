@@ -37,31 +37,21 @@
             data-show-multi-sort="true">
 
             <thead class="bg-secondary">
-                <tr class="table-active">
-                    <th scope="col" class="text-white" data-sortable="true">Test name</th>
-                    <th scope="col" class="text-white" data-formatter="statusFormatter" data-sortable="true">Result status</th>
-                    <th scope="col" class="text-white" data-formatter="timeFormatter" data-sortable="true">Duration</th>
+                <tr class="table-active d-flex">
+                    <th scope="col" class="text-white col-4" data-sortable="true">Test name</th>
+                    <th scope="col" class="text-white col-2" data-sortable="true">Result status</th>
+                    <th scope="col" class="text-white col-4" data-sortable="true">Fail/Error reason</th>
+                    <th scope="col" class="text-white col-2" data-formatter="timeFormatter" data-sortable="true">Duration</th>
                 </tr>
             </thead>
             <tbody>
-                {% for testsuite in report.testsuites.testsuite %}
-                    {% if testsuite is mapping %}
-                        {% for testcase in testsuite.testcase %}
-                            <tr>
-                                <td class="text-black">{{ testcase['@name'] }}</td>
-                                <td class="text-black {{ testcase['@result'] }}Status">{{ testcase['@result'] }}</td>
-                                <td class="text-black">{{ testcase['@time'] }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else  %}
-                        {% for testcase in report.testsuites.testsuite[testsuite] %}
-                            <tr>
-                                <td class="text-black">{{ testcase['@name'] }}</td>
-                                <td class="text-black {{ testcase['@result'] }}Status">{{ testcase['@result'] }}</td>
-                                <td class="text-black">{{ testcase['@time'] }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                {% for testcase in report.testsuites.testsuite.testcase %}
+                    <tr>
+                        <td class="text-black">{{ testcase['@name'] }}</td>
+                        <td class="text-black {{ testcase['status'] }}Status text-capitalize">{{ testcase['status'] }}</td>
+                        <td class="text-black">{{ testcase.failure['@message'] if 'failure' in testcase else testcase.error['@message'] if 'error' in testcase else 'None' }}</td>
+                        <td class="text-black ">{{ testcase['@time'] }}</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
