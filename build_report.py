@@ -107,6 +107,7 @@ def build_testcase_reports(env, test_results, output_dir):
     testcase_template = env.get_template('testcase_template.html')
     logs = glob(os.path.join(test_results, CSV_FILE_PATTERN))
     for log in logs:
+        log = log.replace('Test-', '')
         platform_name = '.'.join(os.path.split(log)[1].split('.')[0:-1])
         platform_dir = os.path.join(output_dir, platform_name)
         if not os.path.exists(platform_dir):
