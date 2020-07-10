@@ -3,3 +3,7 @@ function timeFormatter(value, row, index, field) {
     time.setSeconds(value);
     return time.toISOString().substr(11, 8);
 }
+
+function searchTextInBootstrapTable(status) {
+    $('.content-container [id]').bootstrapTable('resetSearch', status);
+}

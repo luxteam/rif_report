@@ -118,3 +118,12 @@ hr {
   font-family: "Open Sans";
   font-weight: bold;
 }
+
+.commonButton {
+    border-radius: 13px;
+    border: 1px solid white;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(108, 117, 125, 1);
+    font-family: "Open Sans Bold";
+    line-height: 35px;
+}

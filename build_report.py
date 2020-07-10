@@ -99,7 +99,7 @@ def build_detailed_reports(env, summary_report, output_dir):
     detailed_summary_template = env.get_template('detailed_summary_template.html')
     for platform in summary_report['results']:
         detailed_summary_html = detailed_summary_template.render(title='Results of RIF performance tests ({})'.format(summary_report['results'][platform]['name']),
-                                           report=summary_report['results'][platform], platform_name=platform)
+                                           report=summary_report['results'][platform]['testsuites']['testsuite'], platform_name=platform)
         save_html_report(detailed_summary_html, output_dir, DETAILED_REPORT_HTML.format(platform))
 
 
