@@ -47,7 +47,13 @@
             <tbody>
                 {% for testcase in report.testsuites.testsuite.testcase %}
                     <tr>
-                        <td class="text-black">{{ testcase['@name'] }}</td>
+                        <td class="text-black">
+                            {% if testcase['status'] == 'passed' %}
+                                <a href="{{ platform_name }}/{{ testcase['@name'] }}.html">{{ testcase['@name'] }}</a>
+                            {% else %}
+                                {{ testcase['@name'] }}
+                            {% endif%}
+                        </td>
                         <td class="text-black {{ testcase['status'] }}Status text-capitalize">{{ testcase['status'] }}</td>
                         <td class="text-black">{{ testcase.failure['@message'] if 'failure' in testcase else testcase.error['@message'] if 'error' in testcase else 'None' }}</td>
                         <td class="text-black ">{{ testcase['@time'] }}</td>

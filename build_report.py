@@ -7,6 +7,8 @@ from config import *
 from glob import glob
 import xmltodict
 import json
+import csv
+import re
 
 
 logging.basicConfig(filename='report_building.log', level=logging.INFO, format='%(asctime)s :: %(levelname)s :: %(message)s')
@@ -43,6 +45,10 @@ def prepare_results_dir(output_dir):
         logger.error('Fail during copying report resources: {}'.format(str(err)))
 
 
+def get_displayable_platform_name(platform_name):
+    return platform_name.replace('_', ' '). replace('-', ' (') + ')'
+
+
 def build_summary_report(test_results):
     summary_report = {}
     summary_report['results'] = {}
@@ -74,7 +80,7 @@ def build_summary_report(test_results):
                 testcase['status'] = 'passed'
 
         # make platform name more readable
-        displayable_platform_name = platform_name.replace('_', ' '). replace('-', ' (') + ')'
+        displayable_platform_name = get_displayable_platform_name(platform_name)
         summary_report['results'][platform_name]['name'] = displayable_platform_name
 
         summary_report['summary']['statuses']['Passed'] += int(summary_report['results'][platform_name]['testsuites']['@tests']) \
@@ -93,8 +99,47 @@ def build_detailed_reports(env, summary_report, output_dir):
     detailed_summary_template = env.get_template('detailed_summary_template.html')
     for platform in summary_report['results']:
         detailed_summary_html = detailed_summary_template.render(title='Results of RIF performance tests ({})'.format(summary_report['results'][platform]['name']),
-                                           report=summary_report['results'][platform])
-        save_html_report(detailed_summary_html, output_dir, platform + '_detailed.html')
+                                           report=summary_report['results'][platform], platform_name=platform)
+        save_html_report(detailed_summary_html, output_dir, DETAILED_REPORT_HTML.format(platform))
+
+
+def build_testcase_reports(env, test_results, output_dir):
+    testcase_template = env.get_template('testcase_template.html')
+    logs = glob(os.path.join(test_results, CSV_FILE_PATTERN))
+    for log in logs:
+        platform_name = '.'.join(os.path.split(log)[1].split('.')[0:-1])
+        platform_dir = os.path.join(output_dir, platform_name)
+        if not os.path.exists(platform_dir):
+            os.makedirs(platform_dir)
+        with open(log) as file:
+            lines = file.readlines()
+        csv_lines = []
+        for line in lines:
+            # delete new line symbol and ; at the end
+            line = line[0:-2]
+            # if it isn't title with testcase name before next csv
+            if len(line.split(';')) != 1:
+                csv_lines.append(line)
+            else:
+                # check that it isn't first testcase
+                if len(csv_lines) != 0:
+                    # check that current testcase has some csv data
+                    if len(csv_lines) != 1:
+                        generate_testcase_reports(csv_lines, testcase_template, platform_dir, testcase_name, platform_name)
+                    csv_lines.clear()
+                testcase_name = line.replace(';', '')
+    generate_testcase_reports(csv_lines, testcase_template, platform_dir, testcase_name, platform_name)
+
+
+def generate_testcase_reports(csv_lines, testcase_template, platform_dir, testcase_name, platform_name):
+    csv_reader = csv.DictReader(csv_lines, delimiter=';')
+    converted_csv = [ row for row in csv_reader ]
+    testcase_html = testcase_template.render(
+        title='{testcase} testcase details ({platform})'.format(testcase=testcase_name, platform=get_displayable_platform_name(platform_name)), 
+        data=converted_csv
+    )
+    save_json_report(converted_csv, platform_dir, TESTCASE_REPORT_JSON.format(testcase_name))
+    save_html_report(testcase_html, platform_dir, TESTCASE_REPORT_HTML.format(testcase_name))
 
 
 def main():
@@ -113,8 +158,9 @@ def main():
                                            report=summary_report)
     save_html_report(summary_html, args.output_dir, SUMMARY_REPORT_HTML)
 
-
     build_detailed_reports(env, summary_report, args.output_dir)
+
+    build_testcase_reports(env, args.test_results, args.output_dir)
 
 
 if __name__ == '__main__':
