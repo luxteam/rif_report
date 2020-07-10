@@ -118,6 +118,9 @@ def build_testcase_reports(env, test_results, output_dir):
         for line in lines:
             # delete new line symbol and ; at the end
             line = line[0:-2]
+            # replace spaces after column name or value
+            line = re.sub(r'\s*;', ';', line)
+            line = re.sub(r'\s*$', '', line)
             # if it isn't title with testcase name before next csv
             if len(line.split(';')) != 1:
                 csv_lines.append(line)
