@@ -23,7 +23,7 @@
         function drawSummaryChart() {
             var data = google.visualization.arrayToDataTable([
                 ['Statuses', 'Number of tests']
-                {% for status in report.summary.statuses %}
+                {% for status in report.summary.statuses | sort %}
                     ,['{{ status }}', parseInt('{{ report.summary.statuses[status] }}')]
                 {% endfor %}
             ]);
@@ -35,9 +35,9 @@
                     height: 400
                 },
                 slices: {
-                    0: { color: 'green' },
+                    0: { color: 'darkred' },
                     1: { color: 'red' },
-                    2: { color: 'darkred' },
+                    2: { color: 'green' },
                     3: { color: 'yellow' }
                 },
                 fontSize: 16,
