@@ -108,7 +108,6 @@ def build_testcase_reports(env, test_results, output_dir):
     logs = glob(os.path.join(test_results, CSV_FILE_PATTERN))
     for log in logs:
         platform_name = os.path.split(log)[1].replace('Test-', '').replace('.csv', '')
-        print(platform_name)
         platform_dir = os.path.join(output_dir, platform_name)
         if not os.path.exists(platform_dir):
             os.makedirs(platform_dir)
