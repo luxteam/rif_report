@@ -1,7 +1,7 @@
 function timeFormatter(value, row, index, field) {
-    var time = new Date(null);
-    time.setSeconds(value);
-    return time.toISOString().substr(11, 8);
+    let seconds = Math.floor(value / 1000)
+    let millisecods = Math.floor(value % 1000)
+    return `${seconds}s ${millisecods}ms`
 }
 
 function searchTextInBootstrapTable(status) {

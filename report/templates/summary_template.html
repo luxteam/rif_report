@@ -58,7 +58,7 @@
         function drawComparisionChart() {
             var data = google.visualization.arrayToDataTable([
                 [
-                'Duration'
+                'Duration [ms]'
                 {% for platform in report.results %}
                     , '{{ report.results[platform].name }}'
                 {% endfor %}
@@ -77,7 +77,7 @@
                     subtitle: 'The lower is better'
                 },
                 axes: {
-                    y: {0: {side: 'left', label: 'Time, s'}},
+                    y: {0: {side: 'left', label: 'Time, ms'}},
                     x: {0: {side: 'bottom', label: 'Platform'}}
                 }
             };
@@ -146,7 +146,7 @@
                         <td class="text-black {{ 'failureStatus' if report.results[platform].testsuites['@failures'] | int != 0 }}">{{ report.results[platform].testsuites['@failures'] }}</td>
                         <td class="text-black {{ 'errorStatus' if report.results[platform].testsuites['@errors'] | int != 0 }}">{{ report.results[platform].testsuites['@errors'] }}</td>
                         <td class="text-black {{ 'skippedStatus' if report.results[platform].testsuites['@disabled'] | int != 0 }}">{{ report.results[platform].testsuites['@disabled'] }}</td>
-                        <td class="text-black">{{ report.results[platform].testsuites['@time'] }}</td>
+                        <td class="text-black">{{ report.results[platform].testsuites['@time'] | float | round(3) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

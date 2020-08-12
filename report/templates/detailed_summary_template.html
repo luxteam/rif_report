@@ -60,7 +60,7 @@
                     <th scope="col" class="text-white table-col-1">CSV data Report</th>
                     <th data-field="test_status" scope="col" class="text-white table-col-1" data-sortable="true">Result status</th>
                     <th data-field="fail_reason" scope="col" class="text-white table-col-5" data-sortable="true">Fail/Error reason</th>
-                    <th data-field="duration" scope="col" class="text-white table-col-2" data-formatter="timeFormatter" data-sortable="true">Duration</th>
+                    <th data-field="duration" scope="col" class="text-white table-col-2" data-sortable="true">Duration [ms]</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +76,7 @@
                         </td>
                         <td class="text-black {{ testcase['status'] }}Status text-capitalize">{{ testcase['status'] }}</td>
                         <td class="text-black">{{ testcase.failure['@message'] if 'failure' in testcase else testcase.error['@message'] if 'error' in testcase else 'None' }}</td>
-                        <td class="text-black">{{ testcase['@time'] }}</td>
+                        <td class="text-black">{{ testcase['@time'] | float | round(3) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

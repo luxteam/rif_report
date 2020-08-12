@@ -39,17 +39,17 @@
 
             <thead class="bg-secondary">
                 <tr class="table-active">
-                    {% for column_name in data[0] %}
+                    {% for column_name in data.data[0] %}
                         <th scope="col" class="text-white" data-sortable="true">{{ column_name }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                {% for row in data %}
+                {% for row in data.data %}
                     <tr>
                         {% for column_name in row %}
                             {% if column_name == 'Time [ms]' %}
-                                <td class="text-black">{{ row[column_name] | int }}</td>
+                                <td class="text-black">{{ row[column_name] | float | round(3) }}</td>
                             {% else %}
                                 <td class="text-black">{{ row[column_name] }}</td>
                             {% endif %}

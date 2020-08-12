@@ -98,6 +98,16 @@ def build_summary_report(test_results):
 def build_detailed_reports(env, summary_report, output_dir):
     detailed_summary_template = env.get_template('detailed_summary_template.html')
     for platform in summary_report['results']:
+        testgroup_duration = 0
+        testcases_json = glob(os.path.join(output_dir, platform, '*.json'))
+        for testcase_json in testcases_json:
+            with open(testcase_json, 'r') as file:
+                testcase_data = json.load(file)
+            for testcase in summary_report['results'][platform]['testsuites']['testsuite']['testcase']:
+                if os.path.split(testcase_json)[1].replace('.json', '') in testcase['@name']:
+                    testcase['@time'] = testcase_data['summary_duration']
+            testgroup_duration += testcase_data['summary_duration']
+        summary_report['results'][platform]['testsuites']['@time'] = testgroup_duration
         detailed_summary_html = detailed_summary_template.render(title='Results of RIF performance tests ({})'.format(summary_report['results'][platform]['name']),
                                            report=summary_report['results'][platform]['testsuites']['testsuite'], platform_name=platform)
         save_html_report(detailed_summary_html, output_dir, DETAILED_REPORT_HTML.format(platform))
@@ -136,7 +146,14 @@ def build_testcase_reports(env, test_results, output_dir):
 
 def generate_testcase_reports(csv_lines, testcase_template, platform_dir, testcase_name, platform_name):
     csv_reader = csv.DictReader(csv_lines, delimiter=';')
-    converted_csv = [ row for row in csv_reader ]
+    converted_csv = { 'data': [ row for row in csv_reader ] }
+    test_group_duration = 0
+    for row in converted_csv['data']:
+        for key, value in row.items():
+            if 'Time' in key:
+                test_group_duration += float(value)
+                break
+    converted_csv['summary_duration'] = test_group_duration
     testcase_html = testcase_template.render(
         title='{testcase} testcase details ({platform})'.format(testcase=testcase_name, platform=get_displayable_platform_name(platform_name)), 
         data=converted_csv
@@ -153,17 +170,17 @@ def main():
         loader=jinja2.PackageLoader('build_report', 'report/templates'),
         autoescape=True
     )
+    build_testcase_reports(env, args.test_results, args.output_dir)
     summary_report = build_summary_report(args.test_results)
+
+    build_detailed_reports(env, summary_report, args.output_dir)
+
     save_json_report(summary_report, args.output_dir, SUMMARY_REPORT_JSON)
 
     summary_template = env.get_template('summary_template.html')
     summary_html = summary_template.render(title='Results of RIF performance tests',
                                            report=summary_report)
     save_html_report(summary_html, args.output_dir, SUMMARY_REPORT_HTML)
-
-    build_detailed_reports(env, summary_report, args.output_dir)
-
-    build_testcase_reports(env, args.test_results, args.output_dir)
 
 
 if __name__ == '__main__':
