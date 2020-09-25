@@ -57,7 +57,7 @@ def build_summary_report(test_results):
         'Time': 0
     }
     summary_report['summary']['statuses'] = {
-    	'Passed': 0,
+        'Passed': 0,
         'Failed': 0,
         'Error': 0,
         'Skipped': 0
@@ -70,6 +70,8 @@ def build_summary_report(test_results):
         summary_report['results'][platform_name] = xmltodict.parse(xml_report)
 
         for testcase in summary_report['results'][platform_name]['testsuites']['testsuite']['testcase']:
+            # remove incorrect value from xml (it will be replace by values from csv if they exist)
+            testcase['@time'] = 0
             if 'error' in testcase:
                 testcase['status'] = 'error'
             elif 'failure' in testcase:
@@ -91,7 +93,6 @@ def build_summary_report(test_results):
         summary_report['summary']['statuses']['Error'] += int(summary_report['results'][platform_name]['testsuites']['@errors'])
         summary_report['summary']['statuses']['Skipped'] += int(summary_report['results'][platform_name]['testsuites']['@disabled'])
         summary_report['summary']['Tests'] += int(summary_report['results'][platform_name]['testsuites']['@tests'])
-        summary_report['summary']['Time'] += float(summary_report['results'][platform_name]['testsuites']['@time'])
     return summary_report
 
 
