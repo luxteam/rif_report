@@ -151,7 +151,7 @@ def generate_testcase_reports(csv_lines, testcase_template, platform_dir, testca
     test_group_duration = 0
     for row in converted_csv['data']:
         for key, value in row.items():
-            if 'Time' in key:
+            if 'Time Exec' in key:
                 test_group_duration += float(value)
                 break
     converted_csv['summary_duration'] = test_group_duration
